@@ -1,0 +1,12 @@
++ diff -Naur test/CMakeLists.txt.orig test/CMakeLists.txt
+--- test/CMakeLists.txt.orig
++++ test/CMakeLists.txt
+@@ -11,7 +11,7 @@
+   ${BINDIR}/
+   ${PG_PKGLIBDIR}/pgxs/src/test/isolation/
+   ${PG_SOURCE_DIR}/src/test/isolation
+-  REQUIRED)
++  )
+
+ message(STATUS "Using pg_isolation_regress ${PG_ISOLATION_REGRESS}")
+
