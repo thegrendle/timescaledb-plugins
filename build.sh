@@ -10,19 +10,26 @@ function build {
     --build-arg PG_VERSION=${POSTGRES_VERSION} \
     --build-arg PREV_IMAGE=$( cat LastImage ) \
     . && \
-  docker image tag dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} dblonski/timescaledb-plugins:pg${POSTGRES_VERSION}-latest
+  docker image tag dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-latest
   echo dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} > LastImage
   git add LastImage
 }
 
 function publish {
-  docker image push \
-    dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} \
-    dblonski/timescaledb-plugins:pg${POSTGRES_VERSION}-latest
+  local images=(
+    "dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE}"
+    "dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-latest"
+    )
+  for image in ${images[@]}; do
+    docker image push ${image}
+  done
 }
 
 if [[ $# -eq 0 ]]; then
   build
 else
-  $1
+  while [[ $# -ne 0 ]]; do
+    $1
+    shift
+  done
 fi
