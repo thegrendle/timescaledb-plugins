@@ -41,7 +41,6 @@ ARG OSS_ONLY
 LABEL maintainer="Timescale https://www.timescale.com"
 
 COPY docker-entrypoint-initdb.d/* /docker-entrypoint-initdb.d/
-COPY timescaledb.patch /
 COPY --from=tools /go/bin/* /usr/local/bin/
 COPY --from=oldversions /usr/local/lib/postgresql/timescaledb-*.so /usr/local/lib/postgresql/
 COPY --from=oldversions /usr/local/share/postgresql/extension/timescaledb--*.sql /usr/local/share/postgresql/extension/
@@ -73,10 +72,6 @@ RUN set -ex \
     # Build current version \
     && cd /build/timescaledb && rm -fr build \
     && git checkout ${TS_VERSION} \
-    && cd test \
-    && patch -p1 -i /timescaledb.patch \
-    && rm -Rf /timescaledb.patch \
-    && cd .. \
     && ./bootstrap -DCMAKE_BUILD_TYPE=RelWithDebInfo -DREGRESS_CHECKS=OFF -DTAP_CHECKS=OFF -DGENERATE_DOWNGRADE_SCRIPT=ON -DWARNINGS_AS_ERRORS=OFF -DPROJECT_INSTALL_METHOD="docker"${OSS_ONLY} \
     && cd build && make install \
     && cd ~ \
