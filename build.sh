@@ -2,7 +2,7 @@
 
 DATE="$( date +%Y%m%d )"
 TIMESCALE_VERSION="${TIMESCALE_VERSION:-2.7.1}"
-POSTGRES_VERSION="${POSTGRES_VERSION:-14}"
+POSTGRES_VERSION="${POSTGRES_VERSION:-12}"
 
 function build {
   docker build -t dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} \
