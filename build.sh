@@ -1,8 +1,8 @@
 #!/bin/bash
 
 DATE="$( date +%Y%m%d )"
-TIMESCALE_VERSION="${TIMESCALE_VERSION:-2.7.1}"
-POSTGRES_VERSION="${POSTGRES_VERSION:-12}"
+TIMESCALE_VERSION="${TIMESCALE_VERSION:-1.7.5}"
+POSTGRES_VERSION="${POSTGRES_VERSION:-11}"
 
 function build {
   docker build -t dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} \
