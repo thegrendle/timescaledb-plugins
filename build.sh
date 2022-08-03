@@ -9,17 +9,26 @@ function build {
     --build-arg TS_VERSION=${TIMESCALE_VERSION} \
     --build-arg PG_VERSION=${POSTGRES_VERSION} \
     --build-arg PREV_IMAGE=$( cat LastImage ) \
-    . && \
-  docker image tag dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-latest
-  echo dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} > LastImage
-  git add LastImage
+    .
 }
 
 function publish {
+  local POSTGRES_FULL_VERSION="$( docker run -it dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} psql --version | awk '{ print $3; }' | tr '\n\r' '  ' )"
+
+  docker image tag \
+    dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} \
+    dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_FULL_VERSION} && \
+  docker image tag \
+    dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} \
+    dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-latest && \
+  echo dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_FULL_VERSION} > LastImage && \
+  git add LastImage
+
   local images=(
-    "dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE}"
+    "dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_FULL_VERSION}"
     "dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-latest"
     )
+
   for image in ${images[@]}; do
     docker image push ${image}
   done
