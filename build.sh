@@ -21,7 +21,7 @@ function publish {
   docker image tag \
     dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} \
     dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-latest && \
-  echo dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_FULL_VERSION} > LastImage && \
+  #echo dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_FULL_VERSION} > LastImage && \
   git add LastImage
 
   local images=(
