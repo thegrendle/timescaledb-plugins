@@ -54,7 +54,7 @@ RUN set -ex \
                 tar \
     \
     && mkdir -p /build/ \
-    && git clone https://github.com/timescale/timescaledb /build/timescaledb \
+    && git clone https://github.com/timescale/timescaledb.git /build/timescaledb \
     && apk add --no-cache --virtual .build-deps \
                 coreutils \
                 dpkg-dev dpkg \
