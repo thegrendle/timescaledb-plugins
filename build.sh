@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DATE="$( date +%Y%m%d )"
-TIMESCALE_VERSION="${TIMESCALE_VERSION:-2.8.1}"
+TIMESCALE_VERSION="${TIMESCALE_VERSION:-2.13.1}"
 POSTGRES_VERSION="${POSTGRES_VERSION:-14}"
 
 function build {
@@ -11,6 +11,19 @@ function build {
     --build-arg PREV_IMAGE=$( cat LastImage ) \
     .
 }
+
+
+function tag_only {
+  local POSTGRES_FULL_VERSION="$( docker run -it dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} psql --version | awk '{ print $3; }' | tr '\n\r' '  ' )"
+
+  docker image tag \
+    dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} \
+    dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_FULL_VERSION} && \
+  docker image tag \
+    dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} \
+    dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-latest
+}
+
 
 function publish {
   local POSTGRES_FULL_VERSION="$( docker run -it dblonski/timescaledb-plugins:${TIMESCALE_VERSION}-pg${POSTGRES_VERSION}-${DATE} psql --version | awk '{ print $3; }' | tr '\n\r' '  ' )"
