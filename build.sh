@@ -2,7 +2,7 @@
 
 DATE="$( date +%Y%m%d )"
 export TIMESCALE_VERSION="${TIMESCALE_VERSION:-2.25.0}"
-export POSTGRES_VERSION="${POSTGRES_VERSION:-17}"
+export POSTGRES_VERSION="${POSTGRES_VERSION:-18}"
 export PREV_IMAGE="$( cat PreviousImage )"
 
 function build {
