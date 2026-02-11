@@ -1,11 +1,12 @@
 ############################
 # Build tools binaries in separate image
 ############################
+ARG DOCKER_REPO
+ARG GO_VERSION
+ARG OSS_ONLY
 ARG PG_VERSION
 ARG TS_VERSION
-ARG GO_VERSION=1.24
 ARG PREV_IMAGE
-ARG OSS_ONLY
 
 FROM golang:${GO_VERSION}-alpine AS tools
 ENV TOOLS_VERSION=0.17.0
@@ -14,18 +15,16 @@ RUN apk update && apk add --no-cache git \
     && go install github.com/timescale/timescaledb-tune/cmd/timescaledb-tune@main \
     && go install github.com/timescale/timescaledb-parallel-copy/cmd/timescaledb-parallel-copy@main
 
-
 ############################
 # Grab old versions from previous version
 ###########################
 FROM ${PREV_IMAGE} AS oldversion
 RUN rm -f $( pg_config --sharedir )/extension/timescaledb*mock*.sql
 
-
 ############################
 # Now build image and copy in tools
 ############################
-FROM dblonski/postgresql-plugins:pg${PG_VERSION}-latest
+FROM ${DOCKER_REPO}/postgresql-plugins:pg${PG_VERSION}-latest
 LABEL maintainer="Timescale https://www.timescale.com"
 
 COPY docker-entrypoint-initdb.d/* /docker-entrypoint-initdb.d/
